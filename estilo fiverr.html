@@ -1,0 +1,350 @@
+<?php
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $email = $_POST["email"];
+    $password = $_POST["password"];
+    $verificationCode = $_POST["verificationCode"];
+    
+    // Verifique se o código inserido pelo usuário corresponde ao código enviado por e-mail
+    // Suponha que o código enviado por e-mail seja "123456" (você pode gerar um código aleatório)
+    $codigoEnviadoPorEmail = "123456";
+    
+    if ($verificationCode === $codigoEnviadoPorEmail) {
+        // O código está correto, você pode prosseguir com o registro do usuário
+        // Insira o código para registrar o usuário no banco de dados ou realizar outras ações necessárias
+        
+        // Redirecione o usuário para a página de sucesso ou outra página desejada
+        header("Location: pagina-de-sucesso.php");
+        exit;
+    } else {
+        // O código inserido pelo usuário está incorreto, exiba uma mensagem de erro
+        $error = "Código incorreto. Por favor, verifique o código enviado por e-mail.";
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sua Página Profissional</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Certifique-se de criar um arquivo CSS separado -->
+    <script src="script.js"></script> <!-- Certifique-se de criar um arquivo JavaScript separado -->
+    <style>
+        /* Estilos da Caixa Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f2f2f2; /* Nova cor de fundo */
+            z-index: 999;
+            width: 600px; /* Reduzido para 600px */
+            height: 500px; /* Reduzido para 500px */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.3s ease-in-out; /* Adicionada animação de fade-in */
+        }
+
+        .modal-content {
+            padding: 20px;
+            position: relative;
+            border-radius: 10px;
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Botão "Criar Conta" */
+        .create-account-button {
+            display: block;
+            margin: 0 auto;
+            background-color: #FF5722;
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            font-size: 18px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            text-align: center;
+            width: 150px;
+        }
+
+        .create-account-button:hover {
+            background-color: #E64A19;
+        }
+
+        /* Estilos adicionais para tornar a página mais atraente */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px 0;
+        }
+
+        header nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        header nav ul li {
+            display: inline-block;
+            margin-right: 20px;
+        }
+
+        header nav ul li:last-child {
+            margin-right: 0;
+        }
+
+        header nav ul li a {
+            text-decoration: none;
+            color: #fff;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .hero {
+            background-image: url('background.jpg');
+            background-size: cover;
+            background-position: center;
+            text-align: center;
+            padding: 100px 0;
+        }
+
+        .hero h1 {
+            color: #333;
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            color: #777;
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        .hero a {
+            background-color: #FF5722;
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            font-size: 18px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .hero a:hover {
+            background-color: #E64A19;
+        }
+
+        .services {
+            text-align: center;
+            padding: 50px 0;
+        }
+
+        .service {
+            display: inline-block;
+            margin: 0 20px;
+            text-align: left;
+            max-width: 300px;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .service:hover {
+            transform: translateY(-10px);
+        }
+
+        .service img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .service h3 {
+            color: #333;
+            font-size: 24px;
+            margin-top: 10px;
+        }
+
+        .service p {
+            color: #777;
+            font-size: 16px;
+        }
+
+        .contact {
+            background-color: #f4f4f2;
+            text-align: center;
+            padding: 100px 0;
+        }
+
+        .contact h2 {
+            color: #333;
+            font-size: 36px;
+        }
+
+        .contact form {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .input-box {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .password-hint {
+            color: #777;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        /* Estilos para o botão "Enviar Código" */
+        .send-code-button {
+            background-color: #007BFF;
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-left: 10px; /* Espaço à esquerda do botão */
+        }
+
+        .send-code-button:hover {
+            background-color: #0056b3;
+        }
+
+        .contact button {
+            background-color: #FF5722;
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .contact button:hover {
+            background-color: #E64A19;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+        }
+        
+        /* Animação de fade-in */
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#">Início</a></li>
+                <li><a href="#">Serviços</a></li>
+                <li><a href="#">Sobre Nós</a></li>
+                <li><a href="#">Contato</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Bem-vindo ao Trukler</h1>
+        <p>Encontre os melhores serviços e profissionais aqui.</p>
+        <a href="#" id="openModal">Explorar Agora</a>
+    </section>
+
+    <!-- Caixa Modal -->
+    <div class="modal" id="myModal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2>Antes de continuar...</h2>
+            <p>É necessário criar uma conta para acessar esta seção.</p>
+            <button class="create-account-button" id="createAccountButton">Criar Conta</button>
+        </div>
+    </div>
+
+    <!-- Caixa de Registro -->
+    <div class="modal" id="registrationModal">
+        <div class="modal-content" style="width: 535px; height: 240px;">
+            <span class="close" id="closeRegistrationModal">&times;</span>
+            <h2>Crie sua Conta</h2>
+            <form method="POST" action="seu-script-de-processamento.php"> <!-- Substitua "seu-script-de-processamento.php" pelo seu script de processamento PHP -->
+                <label for="email">Email:</label>
+                <input type="text" id="email" name="email" class="input-box" required><br><br>
+                <label for="password">Crie sua senha</label>
+                <input type="password" id="password" name="password" class="input-box" required pattern="^(?=.*[A-Z]).{8,}$">
+                <p class="password-hint">Senha: mínimo 8 caracteres, pelo menos 1 letra maiúscula</p><br><br>
+                <label for="verificationCode">Código:</label>
+                <div style="display: flex; align-items: center;">
+                    <input type="text" id="verificationCode" name="verificationCode" class="input-box" required>
+                    <button class="send-code-button" id="sendCodeButton">Enviar Código</button>
+                </div>
+                <button class="create-account-button" id="submitRegistration">Registrar</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Função para abrir a caixa modal com animação
+        document.getElementById("openModal").addEventListener("click", function() {
+            var modal = document.getElementById("myModal");
+            modal.style.display = "block";
+            modal.style.animation = "fadeIn 0.3s ease-in-out";
+        });
+
+        // Função para fechar a caixa modal com animação
+        document.getElementById("closeModal").addEventListener("click", function() {
+            var modal = document.getElementById("myModal");
+            modal.style.animation = "none";
+            modal.style.display = "none";
+        });
+
+        // Função para abrir a caixa de registro
+        document.getElementById("createAccountButton").addEventListener("click", function() {
+            var registrationModal = document.getElementById("registrationModal");
+            registrationModal.style.display = "block";
+        });
+
+        // Função para fechar a caixa de registro
+        document.getElementById("closeRegistrationModal").addEventListener("click", function() {
+            var registrationModal = document.getElementById("registrationModal");
+            registrationModal.style.display = "none";
+        });
+    </script>
+</body>
+</html>
